@@ -1,11 +1,11 @@
 #!/bin/bash
-export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
-export LIBRARY_PATH=$CONDA_PREFIX/lib:$LIBRARY_PATH
+#export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
+#export LIBRARY_PATH=$CONDA_PREFIX/lib:$LIBRARY_PATH
 
 export FASTA_DIR=./fasta_dir
 export OUTPUT_DIR=./
 export PRECOMPUTED_ALIGNMENT_DIR=./alignments
-export MMCIF_DIR=/mmcifs    # UPDATE with path to your mmcifs directory 
+#export MMCIF_DIR=/mmcifs    # UPDATE with path to your mmcifs directory 
 
 python3 run_pretrained_openfold.py $FASTA_DIR \
   $MMCIF_DIR \

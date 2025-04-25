@@ -3,8 +3,11 @@ channels:
   - conda-forge
   - bioconda
   - pytorch
+  - nvidia 
 dependencies:
-  - python=3.9
+  - cuda==12.4.*
+  - nvidia/label/cuda-12.4.0::cuda-toolkit
+  - python=3.10.*
   - libgcc=7.2
   - setuptools=59.5.0
   - pip
@@ -12,27 +15,28 @@ dependencies:
   - pdbfixer
   - pytorch-lightning
   - biopython
-  - numpy
+  - numpy<2.0.0
   - pandas
   - PyYAML==5.4.1
   - requests
-  - scipy==1.7
+  - scipy
   - tqdm==4.62.2
-  - typing-extensions==4.0
+  - typing-extensions
   - wandb
   - modelcif==0.7
   - awscli
   - ml-collections
+  - mkl=2022.1
   - aria2
-  - mkl=2024.0
   - git
-  - bioconda::hmmer==3.3.2
-  - bioconda::hhsuite==3.3.0
-  - bioconda::kalign2==2.04
-  - bioconda::mmseqs2
-  - pytorch::pytorch=1.12.*
+  - bioconda::hmmer
+  - bioconda::hhsuite
+  - bioconda::kalign2
+  - dm-tree
+  - pytorch-cuda=12.4
+  - torchaudio==2.4.1
+  - torchvision==0.19.1
+  - pytorch==2.4.1
   - pip:
       - deepspeed==0.12.4
-      - dm-tree==0.1.6
-      - git+https://github.com/NVIDIA/dllogger.git
-      - git+https://github.com/Dao-AILab/flash-attention.git@5b838a8
+      - flash-attn 

@@ -72,7 +72,8 @@ python3 run_pretrained_openfold.py \
     --output_dir ./ 
 ```
 
-**Notes:**
-- Template searching in the multimer pipeline uses HMMSearch with the PDB SeqRes database, replacing HHSearch and PDB70 used in the monomer pipeline.
-- As with monomer inference, if you've already computed alignments for the query, you can use the `--use_precomputed_alignments` option.
-- At this time, only AlphaFold parameter weights are available for multimer mode. 
+Note that template searching in the multimer pipeline 
+uses HMMSearch with the PDB SeqRes database, replacing HHSearch and PDB70 used in the monomer pipeline.
+
+As with monomer inference, if you've already computed alignments for the query, you can use 
+the `--use_precomputed_alignments` option.
