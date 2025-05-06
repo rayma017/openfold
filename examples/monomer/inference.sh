@@ -5,12 +5,13 @@
 export FASTA_DIR=./fasta_dir
 export OUTPUT_DIR=./
 export PRECOMPUTED_ALIGNMENT_DIR=./alignments
-#export MMCIF_DIR=/mmcifs    # UPDATE with path to your mmcifs directory 
+export MMCIF_DIR=./mmcifs    # UPDATE with path to your mmcifs directory 
 
-python3 run_pretrained_openfold.py $FASTA_DIR \
+python3 ../../run_pretrained_openfold.py $FASTA_DIR \
   $MMCIF_DIR \
   --output_dir $OUTPUT_DIR \
   --config_preset model_1_ptm \
+  --jax_param_path $RESOURCES_DIR/params/params_model_1_ptm.npz \
   --model_device "cuda:0" \
   --data_random_seed 42 \
   --use_precomputed_alignments $PRECOMPUTED_ALIGNMENT_DIR 
