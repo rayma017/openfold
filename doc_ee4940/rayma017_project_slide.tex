@@ -1,0 +1,268 @@
+\documentclass[xcolor = svgnames,hyperref = {colorlinks = true},]{beamer}
+\usepackage{tikz,lipsum,lmodern}
+\usepackage[most]{tcolorbox}
+\usepackage{listofitems} % for \readlist to create arrays
+\usetheme{Madrid}
+\usecolortheme{beaver}
+\usecolortheme{beaver}
+\usefonttheme{structurebold}
+\usepackage[colorlinks]{hyperref}
+\title{Intergation of Openfold into MSI}
+\author{Jack Raymakers}
+\institute{University of Minnesota}
+\date{\today}
+
+%linkcolor [red]
+%anchorcolor [black]
+%citecolor [green]
+%filecolor [cyan]
+%menucolor [red]
+%runcolor [cyan - same as file color]
+%urlcolor [magenta]
+%allcolors -- use this if you want to set all links to the same color
+\newcommand{\sectframe}[1]{\begin{frame}{#1}
+		\section{#1}
+}
+%\begin{frame}{#1}
+%\section{#1}
+\newenvironment{VerbExample}
+{\semiverbatim}
+{\endsemiverbatim}
+
+\begin{document}
+\begin{frame}
+\titlepage
+%\textbf{\hyperlinkslidenext{\beamerbutton{next}}}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Table of Contents}
+\tableofcontents
+\end{frame}
+
+
+\sectframe{Objective and Scope}
+Create an environment for the  openfold project from the aqlaboratory/openfold repository, implement using the GPUs on MSI for Jupiter infrastructure and execute unit test and create a prediction using the openfold model. Document all steps.
+ \end{frame}
+
+\sectframe{Required Environment}
+	\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+		\centering{Create a ticket}\vspace{10pt}
+	\setlength{\itemindent}{-.5in}
+	\begin{itemize}{}		
+		
+		\item{Request a CSE Labs account,\\
+			\hspace{10pt}if you don’t already have one}
+		\item{Request a MSI services}
+		\item{Optional Virtual Online Linux Environment (VOLE)}
+	\end{itemize}
+\vspace{10pt} URL to Create ticket\\
+\url
+{https://tdx.umn.edu/TDClient/31/Portal/Requests/ServiceDet?ID=237}
+	\begin{itemize}{}			
+	\item{Install AnyConnect VPN Client Software(per os)}
+		\url{https://software.cisco.com/download/home/286330811/type/282364313/release/5.1.8.122?i=!pp}
+\end{itemize}
+\end{tcolorbox}
+\end{frame}	
+
+\sectframe{open terminal session using vpn}
+	\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+	\begin{itemize}{}
+	\item{Launch vpn (open AnyConnect-UofMvpnFull,username,passward)}
+{\color{red}~\$}/opt/cisco/secureclient/bin/vpn or (vpnui for gui)
+{\color{cyan}VPN}tc-vpn-1.vpn.umn.edu\\
+{\color{cyan}Group:} [AnyConnect-UofMvpnFull]\\
+{\color{cyan}username:}\$USER\\ 
+{\color{cyan}Password:}\$secret \\	
+	\item{open session to connect to MSI (ssh exmaple) }\\
+ssh username@agate.msi.umn.edu\\
+{\color{cyan}Password:}
+%https://github.com/aqlaboratory/openfold
+\end{itemize}
+\end{tcolorbox}
+\end{frame}
+
+
+\sectframe{Make Project path and clone repos}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+	\begin{itemize}{}
+		\item{Create Project Workspace and change directory}\\
+		 example mkdir -p /scratch.global/\$USER/git\\
+		 example cd /scratch.global/\$USER/git/
+		\item{full path for example}
+		\textbf{\textit{fullpath}} is /scratch.global/\$USER/git 
+		\item{clone repo's}\\
+git clone --recursive https://github.com/NVIDIA/dllogger.git\\	
+git clone --recursive https://github.com/Dao-AILab/flash-attention\\
+git clone https://github.com/NVIDIA/cutlass --depth 1
+		\item{clone openfold from custimize repo}\\
+git clone https://github.com/rayma017/openfold
+		\item{The start point was: aqlaboratory/openfold -b pl\_updates }	
+	\end{itemize}
+\end{tcolorbox}
+\end{frame}
+
+\sectframe{Use mamba to create openfold-env}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+	\begin{itemize}{}
+		\item{customize .condarc to save space on home drive}\\
+		conda config --set auto\_activate\_base false\\
+		conda config --add envs\_dirs /scratch.global/\$USER/.conda/envs\_dir\\
+		conda config --add pkgs\_dirs /scratch.global/\$USER/.conda/pkgs\_dir	
+		\item{run mamba --cd openfold}\\
+		./environment.yml.sh
+		\item{if you have a completion issue navigate to project dir use mamba with update}\\
+		mamba env update -f environment.yml
+		\item{after successful creation you be provide with activate sequence}\\	
+	\end{itemize}
+\end{tcolorbox}
+\end{frame}
+
+\sectframe{Quick Check}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+	\begin{itemize}{}
+		\item{Hop to GPU node}\\
+		srun -N 1 -n 1 --mem=32g -t 240 --gres=gpu:a40:1 --tmp=100g -p interactive-gpu --x11 xterm  -fa default -fs 1
+		\item{Run... conda deactivate}
+		\item{Run... conda activate openfold-env}
+		\item{Run... python test\_cuda.py}
+	\end{itemize}
+\end{tcolorbox}
+\end{frame}
+
+
+
+\sectframe{copy model parameters to your update openfold/resources}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+	\begin{itemize}{}
+		\item{Navigate to inside repo and execute}
+		\item{update conda environmet}
+		source scripts/update\_conda\_vars
+		\item{scripts/download\_openfold\_params.sh resources/}	
+		\item{scripts/download\_openfold\_solseq\_params.sh resources/}
+		\item{scripts/download\_alphafold \_params.sh resources/}
+	\end{itemize}
+\end{tcolorbox}
+\end{frame}
+
+
+\subsection{Run unit test}
+\begin{frame}[fragile]
+	\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+	\begin{itemize}{}
+			\item{Navigate to inside openfold repo exec:}
+			\item{run unit test}\\
+srun -N 1 -n 10 --mem=32g -t 100 --gres=gpu:a40:1 $\backslash$
+--tmp=100g -p interactive-gpu --pty bash\\
+conda actavate openfold-env
+scripts/run\_unit\_tests.sh
+			\item{Make prediction using example}\\
+cd tests/test\_data
+\# Please note the main database is not install\\
+../../examples/monomer/inference.sh
+		\end{itemize}
+	\end{tcolorbox}
+\end{frame}
+
+\sectframe{Current state and Notes}
+	\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+		\begin{itemize}{}
+			\item{openfold model, openfold parameters, alphafold parameters,utilizes and
+			tests are installed}
+			\item{Several Terabytes of date from protein database are install}
+			\item{Several Terabytes of training data are install}\\
+			\item{ran unit test}
+			\item{ran prediction with model}
+			\item{updated original environment to run on MSI}
+			\item{created a git with updates}
+			\item{TODO}
+			\item{Create Jupiter note example on MSI}
+			\item{Verify git/raym017/openfold with fresh install}
+		\end{itemize}
+	\end{tcolorbox}
+\end{frame}
+
+\sectframe{Notes and Questions}
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+	\begin{itemize}{}
+		\item{Resolving conflict cuda ,pytorch and requirement from other install}
+		\item{Downloading data exceeded time allocation}
+		\item{Urls that no longer existed}
+		\item{GUI: launching plots html,raster}
+		\item{Resolving help gain structure of the database}
+		\item{Questions:}
+	\end{itemize}
+\end{tcolorbox}
+\end{frame}
+\end{document}
+%srun -N 1 -n 10 --mem=32g -t 100 --gres=gpu:a40:1 --tmp=100g -p interactive-gpu --pty bash
+
+
+%273  apptainer pull docker:docker.io/nvidia/cuda:10.2-cudnn8-runtime-ubuntu18.04
+%274  apptainer pull docker://docker.io/nvidia/cuda:10.2-cudnn8-runtime-ubuntu18.04
+%275  apptainer pull docker://nvidia/cuda:10.2-cudnn8-runtime-ubuntu18.04
+
+%  286  apptainer build runtime_latest.sif library://runtime_latest
+
+% apptainer shell  -f --overlay my_overlay --dns 8.8.8.8 pytorch_24.04-py3.sif
+
+%apptainer sif info pytorch_24.04-py3.sif 
+%apptainer run --dns 8.8.8.8 --overlay my_overlay git/runtime_latest.sif
+
+% rayma017@ahl03 [/scratch.global/rayma017/git] % curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+
+% bash  Miniforge3-$(uname)-$(uname -m).sh
+
+% Do you wish to update your shell profile to automatically initialize conda?
+%This will activate conda on startup and change the command prompt when activated.
+%If you'd prefer that conda's base environment not be activated on startup,
+%run the following command when conda is activated:
+
+%
+
+%You can undo this by running `conda init --reverse $SHELL`? [yes|no]
+%\subsection{Create first cut of requirements}
+%\begin{frame}[fragile]
+%		\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+	%			\begin{itemize}{}
+		%				\item{hop to node with gpu slum job}\\
+		%
+		%				srun -N 1 -n 10 --mem=32g -t 100 --gres=gpu:a40:1 $\backslash$  \\
+		%				--tmp=100g -p interactive-gpu --pty bash\\
+		%				\item{change directory to the openfold project directory}\\
+		%				cd /scratch.global/\$USER/git/openfold
+		%				\item{Determine the dependencies and determine what is installed}
+		%\begin{verbatim}
+		%INSTALLEDLIST="$(
+		%pip3 list | sed  's/  *.*//' | \
+		%tail -n +3 piplist.txt | \
+		%tr '\n' '|' | \
+		%sed -E 's/.$//')"
+		%tail -n +7 environment.yml | \
+		%sed -E "/$INSTALLEDLIST/d" | \
+		%sed -E 's/  *\- //' | \
+		%sed -E 's/bioconda:://' | \
+		%sed -E 's/=.*$//'> pipinstall.txt
+		%tail -n +3 pipinstall.txt
+		%\end{verbatim}					%
+		%			\end{itemize}
+	
+	%		\end{tcolorbox}
+%\end{frame}
+mkdir run_dir
+cp -r opedfold/scripts run_dir
+ 
+535  scripts/run_unit_tests.sh
+#!/usr/bin/env bash
+sed -i '2 conda shell.bash activate openfold-env > /dev/null' inference.sh
+sed -i '$a conda shell.bash deactivate > /dev/null' inference.sh
+set -e
+conda activate openfold-env
+## DO SOME STUFF ##
+deactivate
+
+conda install -n base conda-libmamba-solver
+conda config --set solver libmamba
+conda install -n openfold-env nb_conda --solver classic

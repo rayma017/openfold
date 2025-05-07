@@ -1,0 +1,84 @@
+\documentclass[]{article}
+\usepackage{tikz,lipsum,lmodern}
+\usepackage[most]{tcolorbox}
+\usepackage[top=0pt,bottom=1cm,left=2cm,right=2cm,heightrounded]{geometry}
+
+%opening
+\title{Interactive Session Jupiter to launch openfold environment gui example}
+\author{Jack Raymakers}
+\begin{document}
+\maketitle
+\vspace{-20pt} 
+\setlength\parindent{0pt}
+%\section{}
+Jupiter\\
+\\
+This app will launch a Jupyter server using Python.\\\\
+\emph{Jupyter interface}
+\begin{tcolorbox}[colback=white,colframe=gray!75!black]{
+		Lab
+}
+\end{tcolorbox}
+This defines the interface of Jupyter you want to start (Notebook or Lab).\\\\
+\emph{Jupyter Python}
+\begin{tcolorbox}[colback=white,colframe=gray!75!black]{
+Custom(Specify below)
+}
+\end{tcolorbox}
+
+This defines the Python distribution of Jupyter you want to start.\\\\
+
+\emph{Custom Python Environment}
+\begin{tcolorbox}[colback=white,colframe=gray!75!black]{
+\begin{verbatim}
+module load anaconda/miniconda3_4.8.3-jupyter
+source /common/software/install/manual/miniforge3/24.3/etc/profile.d/conda.sh
+conda activate openfold-env
+echo "CONDA_PREFIX=$CONDA_PREFIX"
+echo "PATH=$PATH"
+\end{verbatim}	
+	}
+\end{tcolorbox}
+Enter commands (module load, source activate, etc) to create your desired Jupyter environment; jupyter MUST be on your path and either notebook or jupyterlab installed in your Python environment.\\\\
+
+\emph{Notebook Root}
+\begin{tcolorbox}[colback=white,colframe=gray!75!black]{
+/scratch.global/rayma017/Workspace/FinalProject/
+}
+\end{tcolorbox}
+The root notebook folder to use. If empty, defaults to your home directory.\\\\
+\emph{Account}
+\begin{tcolorbox}[colback=white,colframe=gray!75!black]{
+ee4940
+}
+\end{tcolorbox}
+Select Slurm account to charge, will also set Jupyter's GID to this group.\\\\
+\emph{Resources}
+\begin{tcolorbox}[colback=white,colframe=gray!75!black]{
+Interactive GPU-16 cores,60 GB, 100 GB local scratch,1 A40
+}
+\end{tcolorbox}
+\emph{Time Limit}
+\begin{tcolorbox}[colback=white,colframe=gray!75!black]{
+24 hours
+}
+\end{tcolorbox}
+Shorter times will probably start faster
+[] I would like to receive an email when the session starts
+
+\newpage
+\newgeometry{top=25mm, bottom=25mm} 
+
+For the Gui examples two notebooks were create to run on the MSI:\\
+The openfold-env has been already created.\\\\
+
+Run once:\\
+conda activate openfold-env\\
+python -m ipykernel install --name openfold-env --display-name "Python openfold-env"\\\\
+
+launch a jupyter session with the setup from  prior page.\\
+		\begin{itemize}{}
+			\item{example\_notebook.ipynb}
+			\item{example\_py3dmol.ippynb}
+		\end{itemize}
+\end{document}
